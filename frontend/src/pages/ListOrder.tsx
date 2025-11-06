@@ -551,15 +551,6 @@ useEffect(() => {
                           ))}
                         </ul>
                       </td>
-                      <td style={{ textAlign: "left" }}>
-                        <ul>
-                          {order.cakes.map((cake, index) => (
-                            <li key={`${order.id_order}-${cake.cake_id}-${index}`}>
-                              {cake.fruit_option}
-                            </li>
-                          ))}
-                        </ul>
-                      </td>
                       <td className='message-cell' style={{ textAlign: "left" }}>
                         <ul>
                           {order.cakes.map((cake, index) => (
@@ -769,15 +760,6 @@ useEffect(() => {
                                 ))}
                               </ul>
                             </td>
-                            <td style={{ textAlign: "left" }}>
-                              <ul>
-                                {order.cakes.map((cake, index) => (
-                                  <li key={`${order.id_order}-${cake.cake_id}-${index}`}>
-                                    {cake.fruit_option}
-                                  </li>
-                                ))}
-                              </ul>
-                            </td>
                             <td className='message-cell' style={{ textAlign: "left" }}>
                               <ul>
                                 {order.cakes.map((cake, index) => (
@@ -844,14 +826,6 @@ useEffect(() => {
                     {order.cakes.map((cake, index) => (
                       <li key={`${cake.cake_id}-${index}`}>
                         {cake.name} - 個数: {cake.amount} - {cake.size}
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <ul>
-                    {order.cakes.map((cake, index) => (
-                      <li key={`${cake.cake_id}-${index}`}>
-                        {cake.name} - フルーツ盛り: {cake.fruit_option}
                       </li>
                     ))}
                   </ul>
@@ -958,13 +932,6 @@ useEffect(() => {
                     <td>
                       <ul>
                         {order.cakes.map((cake, i) => (
-                          <li key={i}>{cake.fruit_option}</li>
-                        ))}
-                      </ul>
-                    </td>
-                    <td>
-                      <ul>
-                        {order.cakes.map((cake, i) => (
                           <li key={i}>{cake.message_cake}</li>
                         ))}
                       </ul>
@@ -1061,14 +1028,6 @@ useEffect(() => {
                     <td>
                       <ul>
                         {order.cakes.map((cake, i) => (
-                          <li key={i}>{cake.fruit_option}</li>
-                        ))}
-                      </ul>
-                    </td>
-                    
-                    <td>
-                      <ul>
-                        {order.cakes.map((cake, i) => (
                           <li key={i}>{cake.message_cake}</li>
                         ))}
                       </ul>
@@ -1143,13 +1102,6 @@ useEffect(() => {
                       <ul>
                         {order.cakes.map((cake, i) => (
                           <li key={i}>{cake.amount}</li>
-                        ))}
-                      </ul>
-                    </td>
-                    <td>
-                      <ul>
-                        {order.cakes.map((cake, i) => (
-                          <li key={i}>{cake.fruit_option}</li>
                         ))}
                       </ul>
                     </td>
@@ -1250,7 +1202,6 @@ useEffect(() => {
                 <span className='cake-amount'>¥{cake.price.toLocaleString()}</span>
                 <span className='cake-size'>サイズ: {cake.size}</span>
                 <span className='cake-quantity'>個数: {cake.amount}</span>
-                <span className='cake-fruitop'>フルーツ盛り: {cake.fruit_option}</span>
               </li>
             ))}
           </ul>

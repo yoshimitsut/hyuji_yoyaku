@@ -6,7 +6,6 @@ import DateTimePicker from "./DateTimePicker";
 import type { Order, Cake, OrderCake, SizeOption } from "../types/types";
 import './EditOrderModal.css';
 import { formatDateForBackend } from "../utils/dateUtils";
-import FruitOptionRadio from "./FruitOptionRadio";
 
 type Props = {
   editingOrder: Order;
@@ -61,8 +60,7 @@ export default function EditOrderModal({
         amount: 1,
         size: firstSize?.size || "",
         price: firstSize?.price || 0,
-        message_cake: "",
-        fruit_option: "無し", // 🔹 Corrigido para "なし"
+        message_cake: ""
       };
       
       setCakes(prev => [...prev, newCake]);
@@ -319,14 +317,6 @@ export default function EditOrderModal({
                         }
                       />
                     </div>
-
-                    <FruitOptionRadio
-                      value={cake.fruit_option}
-                      onChange={(val) => !isSaving && updateCake(index, "fruit_option", val)} // 🔹 Não permite mudar durante salvamento
-                      name={`fruit-option-${index}`}
-                      label="フルーツ盛り"
-                      required
-                    />
 
                     {/* 数量 */}
                     <div style={{ width: "49%" }}>
