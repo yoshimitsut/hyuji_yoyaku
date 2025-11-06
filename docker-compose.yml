@@ -47,6 +47,7 @@ services:
       - VIRTUAL_HOST=${FRONTEND_DOMAIN}
       - VIRTUAL_PORT=80
       - LETSENCRYPT_HOST=${FRONTEND_DOMAIN}
+      - VITE_API_URL=${BACKEND_DOMAIN}
     networks:
       - hyuji_yoyaku-backend 
       - beurre_mou_proxy-tier 
