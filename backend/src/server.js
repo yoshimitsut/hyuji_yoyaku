@@ -12,6 +12,13 @@ const PORT = process.env.PORT || 3001;
 // const resend = new Resend(process.env.RESEND_API_KEY);
 const resend = new Resend("re_ecUCJmMg_9n5TprDshhvgTGMWrcf7NJdz");
 
+const EMAIL_CONFIG = {
+  fromName: process.env.EMAIL_FROM_NAME,
+  fromResend: process.env.EMAIL_FROM_RESEND,
+  fromGmail: process.env.EMAIL_FROM_GMAIL,
+  gmailPass: process.env.EMAIL_PASS
+};
+
 app.use(cors());
 app.use(express.json());
 
@@ -167,8 +174,13 @@ app.post('/api/reservar', async (req, res) => {
     `;
     
     await resend.emails.send({
-      from: "Patisserie H.Yuji <order@yoyaku.h-yuji.com>",
-      to: [newOrder.email, "yoyaku.patisserie.h.yuji@gmail.com"],
+      // from: "Patisserie H.Yuji <order@yoyaku.h-yuji.com>",
+      from: `"${EMAIL_CONFIG.fromName}" <${EMAIL_CONFIG.fromResend}>`,
+      to: [
+        newOrder.email, 
+        "shimitsutanaka@gmail.com"
+        // EMAIL_CONFIG.fromGmail,
+      ],
       subject: `🎂 ご注文確認 - 受付番号 ${String(orderId).padStart(4,"0")}`,
       html: htmlContent,
       attachments: [{
@@ -211,10 +223,10 @@ app.put('/api/orders/:id_order', async (req, res) => {
     port: 587,
     secure: false,
     auth: {
-        user: "yoyaku.patisserie.h.yuji@gmail.com",
+        // user: "yoyaku.patisserie.h.yuji@gmail.com",
         // user: "shimitsutanaka@gmail.com",
-        pass: "dtuiccnedvrncsxq"
-        // pass: "vmiepzoxltefekcr"
+        user: EMAIL_CONFIG.fromGmail,
+        pass: EMAIL_CONFIG.gmailPass
     }
   });
 
@@ -409,8 +421,12 @@ app.put('/api/orders/:id_order', async (req, res) => {
     }, 0);
 
     const mailOptions = {
-        from: '"Patisserie H.Yuji" <order@yoyaku.h-yuji.com>', 
-        to: email, 
+        from: `"Patisserie H.Yuji" <${EMAIL_CONFIG.fromResend}>`,
+        to: [
+            email, 
+            // EMAIL_CONFIG.fromGmail,
+            "shimitsutanaka@gmail.com"
+          ],  
         subject: `🎂 ご注文内容変更のお知らせ - 受付番号 ${String(id_order).padStart(4, "0")}`,
         html: `
           <div style="border: 1px solid #ddd; padding: 20px; max-width: 400px; margin: 0 auto; font-family: Arial, sans-serif;">
@@ -487,10 +503,8 @@ app.put('/api/reservar/:id_order', async (req, res) => {
     port: 587,
     secure: false,
     auth: {
-      user: "yoyaku.patisserie.h.yuji@gmail.com",
-      // user: "shimitsutanaka@gmail.com",
-        pass: "dtuiccnedvrncsxq"
-        // pass: "vmiepzoxltefekcr"
+      user: EMAIL_CONFIG.fromGmail,
+      pass: EMAIL_CONFIG.gmailPass
     }
   });
 
@@ -557,8 +571,12 @@ app.put('/api/reservar/:id_order', async (req, res) => {
         const formattedDate = formatDateJP(order.date);
 
         const mailOptions = {
-          from: '"Patisserie H.Yuji" <order@yoyaku.h-yuji.com>',
-          to: order.email,
+          from: `"Patisserie H.Yuji" <${EMAIL_CONFIG.fromResend}>`,
+          to: [
+          order.email,
+          // EMAIL_CONFIG.fromGmail,
+          "shimitsutanaka@gmail.com"
+        ],
           subject: `ご注文のキャンセル完了 - 受付番号 ${String(id_order).padStart(4, "0")}`,
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0;">
