@@ -68,8 +68,8 @@ useEffect(() => {
         )] as string[];
         
         setAvailableDates(uniqueDates);
-        console.log('📅 Datas disponíveis com horários:', uniqueDates);
-        console.log('⏰ Horários carregados:', data.timeslots.length);
+        // console.log('📅 Datas disponíveis com horários:', uniqueDates);
+        // console.log('⏰ Horários carregados:', data.timeslots.length);
       } else {
         console.error("Formato inesperado de timeslots:", data);
         setTimeSlotsData([]);
@@ -96,7 +96,7 @@ useEffect(() => {
       blockedDates.push(blockedDate);
     }
 
-    console.log('🚫 Datas bloqueadas:', blockedDates.map(d => format(d, 'yyyy-MM-dd')));
+    // console.log('🚫 Datas bloqueadas:', blockedDates.map(d => format(d, 'yyyy-MM-dd')));
     return blockedDates;
   }, [today, diasABloquear]);
 
@@ -108,7 +108,7 @@ const isDateAllowed = (date: Date) => {
   // 1. Verificar se a data é anterior à data atual
   const isPastDate = date < today;
   if (isPastDate) {
-    console.log(`🚫 Data ${dateStr} é anterior à data atual`);
+    // console.log(`🚫 Data ${dateStr} é anterior à data atual`);
     return false;
   }
   
@@ -117,18 +117,18 @@ const isDateAllowed = (date: Date) => {
     isSameDay(blockedDate, date)
   );
   if (isBlocked) {
-    console.log(`🚫 Data ${dateStr} está bloqueada (próximos 2 dias)`);
+    // console.log(`🚫 Data ${dateStr} está bloqueada (próximos 2 dias)`);
     return false;
   }
   
   // 3. Verificar se a data tem horários disponíveis
   const hasAvailableSlots = availableDates.includes(dateStr);
   if (!hasAvailableSlots) {
-    console.log(`❌ Data ${dateStr} não tem horários disponíveis no banco`);
+    // console.log(`❌ Data ${dateStr} não tem horários disponíveis no banco`);
     return false;
   }
   
-  console.log(`✅ Data ${dateStr} está disponível`);
+  // console.log(`✅ Data ${dateStr} está disponível`);
   return true;
 };
 
@@ -141,7 +141,7 @@ const isDateAllowed = (date: Date) => {
     }
 
     const formattedDate = format(selectedDate, 'yyyy-MM-dd');
-    console.log('📅 Buscando horários para:', formattedDate);
+    // console.log('📅 Buscando horários para:', formattedDate);
 
     // Filtrar horários disponíveis para a data selecionada
     const availableSlots = timeSlotsData.filter((slot: TimeslotSQL) => {
@@ -149,7 +149,7 @@ const isDateAllowed = (date: Date) => {
       return slotDateStr === formattedDate;
     });
 
-    console.log('⏰ Horários disponíveis:', availableSlots);
+    // console.log('⏰ Horários disponíveis:', availableSlots);
 
     // Converter para options do Select
     const options: TimeOptionType[] = availableSlots.map((slot: TimeslotSQL) => ({
