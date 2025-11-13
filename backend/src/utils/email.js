@@ -70,7 +70,7 @@ async function sendNewOrderConfirmation(newOrder, orderId) {
                 <table style="width: 400px; margin-bottom: 20px; border-collapse: collapse; background: #f9f9f9; border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td style="width: 120px; padding: 15px; vertical-align: top;">
-                            <img src="https://christmascake.h-yuji.com/image/${cake.name.toLowerCase().replace(/\s+/g, '-')}.jpg" 
+                            <img src="${process.env.EMAIL_USER_SITE}/image/${cake.name.toLowerCase().replace(/\s+/g, '-')}.jpg" 
                                 alt="${cake.name}" 
                                 width="100" 
                                 style="border-radius: 6px; border: 1px solid #ddd;"
@@ -145,7 +145,7 @@ async function sendOrderUpdateNotification(orderData) {
             <table style="width: 400px; margin-bottom: 20px; border-collapse: collapse; background: #f9f9f9; border-radius: 8px; overflow: hidden;">
                 <tr>
                     <td style="width: 120px; padding: 15px; vertical-align: top;">
-                        <img src="https://christmascake.h-yuji.com/image/${cake.name.toLowerCase().replace(/\s+/g, '-')}.jpg" 
+                        <img src="${process.env.EMAIL_USER_SITE}/image/${cake.name.toLowerCase().replace(/\s+/g, '-')}.jpg" 
                             alt="${cake.name}" 
                             width="100" 
                             style="border-radius: 6px; border: 1px solid #ddd;"
