@@ -69,7 +69,7 @@ async function sendNewOrderConfirmation(newOrder, orderId) {
             return `
                 <table style="width: 400px; margin-bottom: 20px; border-collapse: collapse; background: #f9f9f9; border-radius: 8px; overflow: hidden;">
                     <tr>
-                        <td style="width: 120px; padding: 12px; vertical-align: top;">
+                        <td style="width: 120px; padding: 12px 0px 12px 12px; vertical-align: top;">
                             <img src="${process.env.EMAIL_USER_SITE}/image/${cake.name.toLowerCase().replace(/\s+/g, '-')}.jpg" 
                                 alt="${cake.name}" 
                                 width="100" 
@@ -144,7 +144,7 @@ async function sendOrderUpdateNotification(orderData) {
         return `
             <table style="width: 400px; margin-bottom: 20px; border-collapse: collapse; background: #f9f9f9; border-radius: 8px; overflow: hidden;">
                 <tr>
-                    <td style="width: 120px; padding: 12px; vertical-align: top;">
+                    <td style="width: 120px; padding: 12px 0px 12px 12px; vertical-align: top;">
                         <img src="${process.env.EMAIL_USER_SITE}/image/${cake.name.toLowerCase().replace(/\s+/g, '-')}.jpg" 
                             alt="${cake.name}" 
                             width="100" 
