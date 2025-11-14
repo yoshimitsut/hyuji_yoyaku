@@ -522,7 +522,7 @@ const TimeslotBatchCreator: React.FC<TimeslotBatchCreatorProps> = ({ onTimeslots
                               title={isExisting ? '登録済み - チェックを外すと削除されます' : 'クリックで選択'}
                             >
                               {timeSlot.time_value}
-                              {isExisting && <span className="timeslot-batch-creator__existing-badge">登録済み</span>}
+                              {isExisting && <span className="timeslot-batch-creator__existing-badge"> 登録済み</span>}
                             </div>
                           );
                         })}
