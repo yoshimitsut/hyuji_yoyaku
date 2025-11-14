@@ -551,6 +551,19 @@
     padding: 10px 6px;
     font-size: 13px;
   }
+
+  .timeslot-batch-creator__subtitle {
+    font-size: 18px;
+  }
+
+  .timeslot-batch-creator__help-text 
+  .timeslot-batch-creator__label 
+  .timeslot-batch-creator__selection-info 
+  .timeslot-batch-creator__day-management
+  .timeslot-batch-creator__message 
+  .timeslot-batch-creator__message--success{
+    font-size: 14px;
+  }
 }
 
 
