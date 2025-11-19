@@ -3,7 +3,6 @@ import "./SalesOrder.css";
 import type { Order } from "../types/types";
 import { STATUS_OPTIONS } from "../types/types";
 import { useNavigate } from "react-router-dom";
-// import { formatDateJP } from "../utils/formatDateJP";
 
 // Interfaces para tipagem correta
 interface CakeSizeData {
@@ -31,12 +30,23 @@ interface MonthlyData {
   statusDayCounts: StatusDayCountsType;
 }
 
+interface Cake {
+  id: number;
+  name: string;
+  sizes: Array<{
+    size: string;
+    price: number;
+    stock: number;
+  }>;
+}
+
 export default function SalesOrder() {
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
   const [activeMonth, setActiveMonth] = useState<string>("");
   const [, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [allCakes, setAllCakes] = useState<Cake[]>([]); // 🔹 NOVO: Lista de todos os bolos
 
   const navigate = useNavigate();
   const statusOptions = STATUS_OPTIONS;
@@ -64,30 +74,56 @@ export default function SalesOrder() {
   };
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/api/list`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Resposta completa da API:", data);
+    // 🔹 CARREGAR TODOS OS BOLOS PRIMEIRO
+    const fetchAllCakes = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/cake`);
+        const data = await response.json();
         
-        let ordersData: Order[] = [];
+        if (data.success && Array.isArray(data.cakes)) {
+          // Ordenar bolos pelo ID
+          const sortedCakes = data.cakes.sort((a: Cake, b: Cake) => a.id - b.id);
+          setAllCakes(sortedCakes);
+          console.log("Todos os bolos carregados:", sortedCakes);
+          return sortedCakes;
+        } else {
+          throw new Error("Formato de resposta inesperado para bolos");
+        }
+      } catch (error) {
+        console.error("Erro ao carregar bolos:", error);
+        return [];
+      }
+    };
+
+    // 🔹 CARREGAR PEDIDOS E PROCESSAR DADOS
+    const fetchOrdersAndProcess = async () => {
+      try {
+        const cakes = await fetchAllCakes();
         
-        if (Array.isArray(data)) {
-          ordersData = data;
-        } else if (data.orders && Array.isArray(data.orders)) {
-          ordersData = data.orders;
-        } else if (data.data && Array.isArray(data.data)) {
-          ordersData = data.data;
+        const ordersResponse = await fetch(`${import.meta.env.VITE_API_URL}/api/list`);
+        const ordersData = await ordersResponse.json();
+        
+        console.log("Resposta completa da API:", ordersData);
+        
+        let ordersDataProcessed: Order[] = [];
+        
+        if (Array.isArray(ordersData)) {
+          ordersDataProcessed = ordersData;
+        } else if (ordersData.orders && Array.isArray(ordersData.orders)) {
+          ordersDataProcessed = ordersData.orders;
+        } else if (ordersData.data && Array.isArray(ordersData.data)) {
+          ordersDataProcessed = ordersData.data;
         } else {
           throw new Error("Formato de resposta inesperado da API");
         }
 
-        console.log("Pedidos processados:", ordersData);
+        console.log("Pedidos processados:", ordersDataProcessed);
 
         // Processar dados por mês
         const monthlyDataMap = new Map<string, MonthlyData>();
         const allDates = new Set<string>();
 
-        ordersData.forEach((order) => {
+        ordersDataProcessed.forEach((order) => {
           const status = order.status?.toLowerCase() || '';
           const date = order.date;
           const monthKey = date.substring(0, 7); // YYYY-MM
@@ -148,6 +184,35 @@ export default function SalesOrder() {
           }
         });
 
+        // 🔹 GARANTIR QUE TODOS OS BOLOS APAREÇAM, MESMO SEM PEDIDOS
+        monthlyDataMap.forEach((monthData) => {
+          cakes.forEach((cake: Cake) => {
+            const cakeName = cake.name.trim();
+            
+            // Se o bolo não existe no summary, criar estrutura vazia
+            if (!monthData.summary[cakeName]) {
+              monthData.summary[cakeName] = {};
+            }
+            
+            // Garantir que todos os tamanhos do bolo apareçam
+            cake.sizes.forEach(sizeInfo => {
+              const size = sizeInfo.size.trim();
+              
+              if (!monthData.summary[cakeName][size]) {
+                monthData.summary[cakeName][size] = {
+                  stock: sizeInfo.stock,
+                  days: {}
+                };
+                
+                // Inicializar todos os dias com 0
+                monthData.dates.forEach(date => {
+                  monthData.summary[cakeName][size].days[date] = 0;
+                });
+              }
+            });
+          });
+        });
+
         // Ordenar datas em cada mês e criar array final
         const processedMonthlyData = Array.from(monthlyDataMap.values()).map(monthData => ({
           ...monthData,
@@ -168,15 +233,17 @@ export default function SalesOrder() {
 
         setMonthlyData(processedMonthlyData);
         setActiveMonth(initialMonth);
-        setOrders(ordersData);
+        setOrders(ordersDataProcessed);
         setLoading(false);
         setError(null);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Erro ao carregar pedidos:", error);
-        setError("Erro ao carregar dados: " + error.message);
+        setError("Erro ao carregar dados: " + error);
         setLoading(false);
-      });
+      }
+    };
+
+    fetchOrdersAndProcess();
   }, []);
 
   // Encontrar dados do mês ativo
@@ -226,6 +293,23 @@ export default function SalesOrder() {
   }, [activeMonthData]);
 
   const totalGlobal = Object.values(totalGeralPorDia).reduce((a, b) => a + b, 0);
+
+  // 🔹 FUNÇÃO PARA OBTER BOLOS ORDENADOS POR ID
+  const getCakesInOrder = useMemo(() => {
+    if (!activeMonthData) return [];
+    
+    // Criar array de bolos ordenados por ID
+    const orderedCakes = allCakes
+      .filter(cake => {
+        // Incluir apenas bolos que existem no summary OU todos os bolos
+        const cakeName = cake.name.trim();
+        return activeMonthData.summary[cakeName] !== undefined;
+      })
+      .sort((a, b) => a.id - b.id); // Ordenar por ID
+    
+    console.log("Bolos ordenados por ID:", orderedCakes);
+    return orderedCakes;
+  }, [activeMonthData, allCakes]);
 
   if (error) return (
     <div className="error-container">
@@ -304,8 +388,11 @@ export default function SalesOrder() {
             </div>
           </div>
 
-          {/* Tabelas Individuais por Bolo */}
-          {Object.entries(activeMonthData.summary).map(([cakeName, sizes]) => {
+          {/* 🔹 Tabelas Individuais por Bolo - AGORA ORDENADAS POR ID */}
+          {getCakesInOrder.map((cake) => {
+            const cakeName = cake.name.trim();
+            const sizes = activeMonthData.summary[cakeName] || {};
+            
             const totalPorDia = activeMonthData.dates.reduce((acc: Record<string, number>, date) => {
               let total = 0;
               Object.values(sizes).forEach((sizeData) => {
@@ -318,11 +405,13 @@ export default function SalesOrder() {
             const totalGeral = Object.values(totalPorDia).reduce((a, b) => a + b, 0);
 
             return (
-              <div key={cakeName} className="cake-table-wrapper">
+              <div key={cake.id} className="cake-table-wrapper">
                 <table className="summary-table">
                   <thead>
                     <tr>
-                      <th>{cakeName}</th>
+                      <th>{cakeName}
+                         {/* (ID: {cake.id}) */}
+                        </th>
                       {activeMonthData.dates.map((date) => (
                         <th 
                           key={date} 
