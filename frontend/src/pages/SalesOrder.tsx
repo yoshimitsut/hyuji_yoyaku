@@ -314,15 +314,15 @@ export default function SalesOrder() {
   if (error) return (
     <div className="error-container">
       <p>{error}</p>
-      <button onClick={() => window.location.reload()}>Tentar Novamente</button>
+      <button onClick={() => window.location.reload()}>エラー</button>
     </div>
   );
 
-  if (monthlyData.length === 0) return (
-    <div className="loading-container">
-      <p>Loading...</p>
-    </div>
-  );
+  // if (monthlyData.length === 0) return (
+  //   <div className="loading-container">
+  //     <p>Loading...</p>
+  //   </div>
+  // );
 
   return (
     <div className="summary-table-container">
