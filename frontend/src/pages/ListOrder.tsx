@@ -498,7 +498,6 @@ useEffect(() => {
                     </div>
                   </th>
                   <th>個数</th>
-                  <th>フルーツ盛り</th>
                   <th className='message-cell'>メッセージプレート</th>
                   <th className='message-cell'>その他メッセージ</th>
                   <th>電話番号</th>
@@ -887,7 +886,6 @@ useEffect(() => {
                   <th>受取希望日時</th>
                   <th>ご注文のケーキ</th>
                   <th>個数</th>
-                  <th>フルーツ盛り</th>
                   <th className='message-cell'>メッセージプレート</th>
                   <th className='message-cell'>その他メッセージ</th>
                   <th>電話番号</th>
@@ -997,7 +995,6 @@ useEffect(() => {
                   <th>受取希望日時</th>
                   <th>ご注文のケーキ</th>
                   <th>個数</th>
-                  <th>フルーツ盛り</th>
                   <th>メッセージプレート</th>
                   <th>その他メッセージ</th>
                   <th>電話番号</th>
@@ -1077,7 +1074,6 @@ useEffect(() => {
                   <th>受取希望日時</th>
                   <th>ご注文のケーキ</th>
                   <th>個数</th>
-                  <th>フルーツ盛り</th>
                   <th>メッセージプレート</th>
                   <th>その他メッセージ</th>
                   <th>電話番号</th>
