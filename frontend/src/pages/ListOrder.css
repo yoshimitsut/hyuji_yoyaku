@@ -461,7 +461,7 @@ ul {
 
 .order-header {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 8px;
   margin-bottom: 12px;
 }
