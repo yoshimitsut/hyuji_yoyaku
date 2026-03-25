@@ -556,7 +556,7 @@ const isDateAllowed = (date: Date) => {
                   if (getDay(date) === 0) return "domingo-vermelho";
                   return "";
                 }}
-                className="react-datepicker"
+                className="react-datepicker react-datepicker-datapicker"
                 calendarClassName="datepicker-calendar"
                 calendarContainer={MyContainer}
                 required

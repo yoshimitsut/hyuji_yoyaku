@@ -165,6 +165,10 @@ body {
   z-index: 9999; /* acima de tudo */
 }
 
+.react-datepicker-datapicker {
+  border: none !important;
+}
+
 .react-datepicker {
   font-size: 1.2rem;
   width: 100%;
