@@ -12,6 +12,7 @@ import StoreLogin from './pages/StoreLogin';
 import ProtectedRoute from './components/ProtectedRoute';
 
 import TimeSlotsManagement from './pages/TimeSlotsManagement';
+import CakeManagement from './pages/CakeManagement';
 
 function App() {
   return (
@@ -43,6 +44,12 @@ function App() {
         <Route path="/admin/date" element={
           <ProtectedRoute>
             <TimeSlotsManagement />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/admin/cake" element={
+          <ProtectedRoute>
+            <CakeManagement />
           </ProtectedRoute>
         } />
 
