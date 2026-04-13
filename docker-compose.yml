@@ -5,15 +5,15 @@ services:
     image: mysql:8.0
     container_name: mysql-hyuji
     restart: always
-    env_file: .env.production 
-    environment: 
+    env_file: .env.production
+    environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
       TZ: "Asia/Tokyo"
     volumes:
-      - hyuji_yoyaku_mysql_data:/var/lib/mysql 
+      - hyuji_yoyaku_mysql_data:/var/lib/mysql
     networks:
       - hyuji_yoyaku-backend
 
@@ -24,7 +24,7 @@ services:
     env_file: .env.production
     environment:
       - NODE_ENV=production
-      - DB_HOST=db 
+      - DB_HOST=db
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_NAME=${DB_NAME}
@@ -34,9 +34,11 @@ services:
       - LETSENCRYPT_HOST=${API_DOMAIN}
     depends_on:
       - db
+    volumes:
+      - /var/www/uploads:/app/uploads
     networks:
       - hyuji_yoyaku-backend
-      - beurre_mou_proxy-tier 
+      - beurre_mou_proxy-tier
 
   frontend:
     build: ./frontend
@@ -49,11 +51,12 @@ services:
       - LETSENCRYPT_HOST=${FRONTEND_DOMAIN}
       - VITE_API_URL=${BACKEND_DOMAIN}
     networks:
-      - hyuji_yoyaku-backend 
-      - beurre_mou_proxy-tier 
+      - hyuji_yoyaku-backend
+      - beurre_mou_proxy-tier
 
 volumes:
   hyuji_yoyaku_mysql_data:
+
 
 networks:
   hyuji_yoyaku-backend:
