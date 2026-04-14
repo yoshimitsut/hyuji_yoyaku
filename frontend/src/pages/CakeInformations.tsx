@@ -4,6 +4,7 @@ import type { Cake } from "../types/types";
 import "./CakeInformations.css";
 
 const API_URL = import.meta.env.VITE_API_URL;
+const FOLDER_URL = import.meta.env.VITE_FOLDER_URL;
 
 export default function CakeInformations() {
   const [cakes, setCakes] = useState<Cake[]>([]);
@@ -59,7 +60,7 @@ export default function CakeInformations() {
           <div className="main-right">
             {selectedCake.image && (
               <img
-                src={`image/${selectedCake.image}`}
+                src={`${API_URL}/image/${FOLDER_URL}/${selectedCake.image}`}
                 alt={selectedCake.name}
               />
             )}
@@ -82,11 +83,10 @@ export default function CakeInformations() {
                     <td style={{ padding: "8px" }}>
                       {size.size}
                     </td>
-                     <td style={{ padding: "8px" }}>
+                    <td style={{ padding: "8px" }}>
                       ¥
                       {/* {size.price.toLocaleString("ja-JP")} */}
                       {size.price.toLocaleString("ja-JP")} 税込
-                      {/* {size.stock === 0 && <span style={{ color: "red"}}>  完売</span>} */}
                     </td>
                   </tr>
                 ))}
@@ -94,7 +94,7 @@ export default function CakeInformations() {
             </table>
 
             <button onClick={handleReserve} className="reserve-btn">
-               
+
             </button>
           </div>
         </div>
