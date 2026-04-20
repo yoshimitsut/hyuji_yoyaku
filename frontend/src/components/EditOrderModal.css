@@ -194,6 +194,28 @@
   background-color: #fff;
 }
 
+@media (max-width: 750px) { 
+  .modal-name {
+    width: 100% !important;
+  }
+
+  .modal-content {
+    width: 95%;
+    max-width: 90vw;
+  }
+
+  .input-text-modal {
+    width: 100%;
+  }
+
+  .modal-edit-content {
+    flex-direction: column;
+  }
+  .modal-mail {
+    flex-direction: column;
+  }
+}
+
 @media (max-width: 450px) { 
   .modal-title {
     font-size: 1rem;

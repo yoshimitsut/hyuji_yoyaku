@@ -161,7 +161,7 @@ export default function EditOrderModal({
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: "2rem", marginTop: "1rem" }}>
+        <div className="modal-mail" style={{ display: "flex", gap: "2rem", marginTop: "1rem" }}>
           <div style={{ width: "50%" }}>
             <label>メールアドレス：</label>
             <input 
