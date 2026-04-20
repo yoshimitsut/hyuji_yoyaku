@@ -10,6 +10,7 @@ import type { Cake, OrderCake, OptionType, MyContainerProps, SizeOption, TimeOpt
 import "./OrderCake.css";
 
 const API_URL = import.meta.env.VITE_API_URL;
+const FOLDER_URL = import.meta.env.VITE_FOLDER_URL;
 
 type CustomOptionType = OptionType & {
   isDisabled?: boolean;
@@ -55,33 +56,33 @@ export default function OrderCake() {
   }, []);
 
   // 🔹 CARREGAR DATAS E HORÁRIOS DISPONÍVEIS DO BANCO
-useEffect(() => {
-  fetch(`${API_URL}/api/timeslots/`)
-    .then(res => res.json())
-    .then((data) => {
-      if (data.success && Array.isArray(data.timeslots)) {
-        setTimeSlotsData(data.timeslots);
-        
-        // Extrair datas únicas que têm horários disponíveis
-        const uniqueDates = [...new Set(
-          data.timeslots.map((slot: TimeslotSQL) => slot.date.split("T")[0])
-        )] as string[];
-        
-        setAvailableDates(uniqueDates);
-        // console.log('📅 Datas disponíveis com horários:', uniqueDates);
-        // console.log('⏰ Horários carregados:', data.timeslots.length);
-      } else {
-        console.error("Formato inesperado de timeslots:", data);
+  useEffect(() => {
+    fetch(`${API_URL}/api/timeslots/`)
+      .then(res => res.json())
+      .then((data) => {
+        if (data.success && Array.isArray(data.timeslots)) {
+          setTimeSlotsData(data.timeslots);
+
+          // Extrair datas únicas que têm horários disponíveis
+          const uniqueDates = [...new Set(
+            data.timeslots.map((slot: TimeslotSQL) => slot.date.split("T")[0])
+          )] as string[];
+
+          setAvailableDates(uniqueDates);
+          // console.log('📅 Datas disponíveis com horários:', uniqueDates);
+          // console.log('⏰ Horários carregados:', data.timeslots.length);
+        } else {
+          console.error("Formato inesperado de timeslots:", data);
+          setTimeSlotsData([]);
+          setAvailableDates([]);
+        }
+      })
+      .catch(err => {
+        console.error("Erro ao carregar datas:", err);
         setTimeSlotsData([]);
         setAvailableDates([]);
-      }
-    })
-    .catch(err => {
-      console.error("Erro ao carregar datas:", err);
-      setTimeSlotsData([]);
-      setAvailableDates([]);
-    });
-}, []);
+      });
+  }, []);
 
 
 
@@ -89,7 +90,7 @@ useEffect(() => {
   // 🔹 GERAR DATAS BLOQUEADAS (apenas os próximos X dias)
   const excludedDates = useMemo(() => {
     const blockedDates: Date[] = [];
-    
+
     // Bloquear apenas os próximos X dias
     for (let i = 0; i < diasABloquear; i++) {
       const blockedDate = addDays(today, i);
@@ -102,35 +103,35 @@ useEffect(() => {
 
   // 🔹 FUNÇÃO SIMPLIFICADA - APENAS DATAS COM HORÁRIOS DISPONÍVEIS
   // 🔹 FUNÇÃO CORRIGIDA - BLOQUEIA DATAS ANTERIORES E VERIFICA DISPONIBILIDADE
-const isDateAllowed = (date: Date) => {
-  const dateStr = format(date, 'yyyy-MM-dd');
-  
-  // 1. Verificar se a data é anterior à data atual
-  const isPastDate = date < today;
-  if (isPastDate) {
-    // console.log(`🚫 Data ${dateStr} é anterior à data atual`);
-    return false;
-  }
-  
-  // 2. Verificar se a data está bloqueada (próximos 2 dias)
-  const isBlocked = excludedDates.some(blockedDate => 
-    isSameDay(blockedDate, date)
-  );
-  if (isBlocked) {
-    // console.log(`🚫 Data ${dateStr} está bloqueada (próximos 2 dias)`);
-    return false;
-  }
-  
-  // 3. Verificar se a data tem horários disponíveis
-  const hasAvailableSlots = availableDates.includes(dateStr);
-  if (!hasAvailableSlots) {
-    // console.log(`❌ Data ${dateStr} não tem horários disponíveis no banco`);
-    return false;
-  }
-  
-  // console.log(`✅ Data ${dateStr} está disponível`);
-  return true;
-};
+  const isDateAllowed = (date: Date) => {
+    const dateStr = format(date, 'yyyy-MM-dd');
+
+    // 1. Verificar se a data é anterior à data atual
+    const isPastDate = date < today;
+    if (isPastDate) {
+      // console.log(`🚫 Data ${dateStr} é anterior à data atual`);
+      return false;
+    }
+
+    // 2. Verificar se a data está bloqueada (próximos 2 dias)
+    const isBlocked = excludedDates.some(blockedDate =>
+      isSameDay(blockedDate, date)
+    );
+    if (isBlocked) {
+      // console.log(`🚫 Data ${dateStr} está bloqueada (próximos 2 dias)`);
+      return false;
+    }
+
+    // 3. Verificar se a data tem horários disponíveis
+    const hasAvailableSlots = availableDates.includes(dateStr);
+    if (!hasAvailableSlots) {
+      // console.log(`❌ Data ${dateStr} não tem horários disponíveis no banco`);
+      return false;
+    }
+
+    // console.log(`✅ Data ${dateStr} está disponível`);
+    return true;
+  };
 
   // 🔹 ATUALIZAR HORÁRIOS QUANDO A DATA MUDAR
   useEffect(() => {
@@ -230,10 +231,10 @@ const isDateAllowed = (date: Date) => {
   const renderDayContents = (day: number, date: Date) => {
     const isSelectable = isDateAllowed(date);
     const dayOfWeek = getDay(date);
-    
+
     const extraClass =
       dayOfWeek === 0 ? "domingo-vermelho" :
-      dayOfWeek === 6 ? "sabado-azul" : "";
+        dayOfWeek === 6 ? "sabado-azul" : "";
 
     return (
       <div className={`day-cell ${extraClass}`}>
@@ -337,7 +338,7 @@ const isDateAllowed = (date: Date) => {
       last_name: (document.getElementById("last-name") as HTMLInputElement).value,
       email: (document.getElementById("email") as HTMLInputElement).value,
       tel: (document.getElementById("tel") as HTMLInputElement).value,
-      date: getLocalDateString(selectedDate), 
+      date: getLocalDateString(selectedDate),
       date_order: format(new Date(), "yyyy-MM-dd"),
       pickupHour,
       status: 'b',
@@ -353,8 +354,8 @@ const isDateAllowed = (date: Date) => {
           message_cake: c.message_cake || ""
         };
       })
-    }; 
-    
+    };
+
     try {
       const res = await fetch(`${API_URL}/api/reservar`, {
         method: "POST",
@@ -424,8 +425,12 @@ const isDateAllowed = (date: Date) => {
                       </button>
                     </div>
                   )}
-                  {selectedCakeData && (
-                    <img className='img-cake-order' src={`image/${selectedCakeData.image}`} alt={selectedCakeData.name} />
+                  {selectedCakeData && selectedCakeData.image && (
+                    <img
+                      className='img-cake-order'
+                      src={`${API_URL}/image/${FOLDER_URL}/${selectedCakeData.image}`}
+                      alt={selectedCakeData.name}
+                    />
                   )}
                   <div className='input-group'>
                     <Select<CustomOptionType>
@@ -463,7 +468,7 @@ const isDateAllowed = (date: Date) => {
                   {selectedCakeData && (
                     <div className='input-group'>
                       <Select<SizeOption>
-                        options={sizeOptions} 
+                        options={sizeOptions}
                         value={selectedSize || null}
                         onChange={(selected) => {
                           if (selected) {
@@ -480,7 +485,7 @@ const isDateAllowed = (date: Date) => {
                       <label className='select-group'>*ケーキのサイズ</label>
                     </div>
                   )}
-                  
+
                   <div className='input-group'>
                     <Select<OptionType>
                       options={Array.from({ length: 10 }, (_, i) => ({ value: String(i + 1), label: String(i + 1) }))}
@@ -494,7 +499,7 @@ const isDateAllowed = (date: Date) => {
                     />
                     <label className='select-group'>*個数:</label>
                   </div>
-                  
+
                   <div className='input-group'>
                     <label htmlFor="message_cake">メッセージプレート</label>
                     <textarea name="message_cake" id="message_cake" placeholder="ご要望がある場合のみご記入ください。"
@@ -578,8 +583,8 @@ const isDateAllowed = (date: Date) => {
               />
               <label htmlFor="pickupHour" className='select-group'>受け取り希望時間</label>
             </div>
-            
-            <div className='input-group' style={{display: 'none'}}>
+
+            <div className='input-group' style={{ display: 'none' }}>
               <label htmlFor="message">その他</label>
               <textarea name="message" id="message" placeholder=""></textarea>
             </div>
