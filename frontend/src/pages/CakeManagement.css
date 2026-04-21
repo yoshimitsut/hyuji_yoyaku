@@ -156,8 +156,8 @@
   margin-top: 15px;
 }
 
-.edit-btn,
-.delete-btn {
+.edit-cake-btn,
+.delete-cake-btn {
   flex: 1;
   padding: 8px 12px;
   border: none;
@@ -167,21 +167,21 @@
   transition: background-color 0.2s;
 }
 
-.edit-btn {
+.edit-cake-btn {
   background: #28a745;
   color: white;
 }
 
-.edit-btn:hover {
+.edit-cake-btn:hover {
   background: #218838;
 }
 
-.delete-btn {
+.delete-cake-btn {
   background: #dc3545;
   color: white;
 }
 
-.delete-btn:hover {
+.delete-cake-btn:hover {
   background: #c82333;
 }
 
@@ -460,7 +460,7 @@
 .submit-cake-btn {
   flex: 1;
   padding: 12px;
-  background-color: #007bff;
+  background-color: #fdd111;
   border: none;
   border-radius: 6px;
   font-weight: bold;
@@ -468,9 +468,14 @@
 }
 
 /* ローディング状態 */
-.submit-cake-btn:disabled {
+.submit-btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
 }
 
 /* Responsividade */

@@ -288,7 +288,7 @@ router.put('/:id', (req, res, next) => {
         for (const size of sizesArray) {
           const sizeIsActive = (size.is_active === undefined || size.is_active === true || size.is_active === 'true' || size.is_active === 1 || size.is_active === '1') ? 1 : 0;
           await connection.query(
-            'INSERT INTO cake_sizes (cake_id, size, stock, price, is_active) VALUES (?, ?, ?, ?)',
+            'INSERT INTO cake_sizes (cake_id, size, stock, price, is_active) VALUES (?, ?, ?, ?, ?)',
             [cakeId, size.size, size.stock || 0, size.price || 0, sizeIsActive]
           );
         }

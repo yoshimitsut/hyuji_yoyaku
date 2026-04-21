@@ -374,13 +374,13 @@ export default function CakeManagement() {
 
                       <div className="cake-actions">
                         <button
-                          className="edit-btn"
+                          className="edit-cake-btn"
                           onClick={() => handleEditCake(cake)}
                         >
                           ✏️ 編集
                         </button>
                         <button
-                          className="delete-btn"
+                          className="delete-cake-btn"
                           onClick={() => handleDeleteCake(cake.id)}
                         >
                           🗑️ 削除
