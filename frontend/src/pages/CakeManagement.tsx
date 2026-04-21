@@ -333,7 +333,7 @@ export default function CakeManagement() {
                     <div className="cake-image">
                       {cake.image ? (
                         <img
-                          src={`${API_URL}/image/myvision88/${cake.image}`}
+                          src={`${API_URL}/image/${FOLDER_URL}/${cake.image}`}
                           alt={cake.name}
                           onError={(e) => {
                             (e.target as HTMLImageElement).src = '/default-cake.jpg';
