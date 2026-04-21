@@ -10,6 +10,7 @@ export type SizeOption = {
   price: number;
   stock: number;
   isDisabled?: boolean;
+  is_active?: number;
 };
 
 export type Cake = {
@@ -17,6 +18,7 @@ export type Cake = {
   name: string;
   description: string | null; // pode ser null no banco
   image: string | null;       // pode ser null
+  is_active?: number;
   sizes: SizeOption[];        // associação via cake_sizes
 };
 

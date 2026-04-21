@@ -14,7 +14,8 @@ export default function Hero() {
     fetch(`${API_URL}/api/cake`)
       .then((res) => res.json())
       .then((data) => {
-        setCakes(data.cakes || []);
+        const activeCakes = (data.cakes || []).filter((cake: Cake) => cake.is_active !== 0);
+        setCakes(activeCakes);
       })
       .catch((err) => console.error("Erro ao carregar bolos:", err));
   }, []);
@@ -33,7 +34,7 @@ export default function Hero() {
   return (
 
     <div>
-
+      
       {/* <div className="christmas-cake-open">
         <div>
           <h2>2025</h2>
@@ -42,36 +43,36 @@ export default function Hero() {
         </div>
       </div> */}
 
-      <div className="hero-main">
-        <div className="hero-wrapper">
-          <div className="hero-grid">
-            {cakes.map((cake, index) => {
-              let extraClass = "";
-              if (index === 0) extraClass = "big";
-              if (index === 1) extraClass = "tall";
-              if (index === 2) extraClass = "wide";
+    <div className="hero-main">
+    <div className="hero-wrapper">
+  <div className="hero-grid">
+    {cakes.map((cake, index) => {
+      let extraClass = "";
+      if (index === 0) extraClass = "big";
+      if (index === 1) extraClass = "tall";
+      if (index === 2) extraClass = "wide";
 
-              // const disabled = isDisabled(cake);
+      // const disabled = isDisabled(cake);
 
-              return (
-                <div
-                  key={`${cake.id ?? index}-${index}`}
-                  className={`hero-cell ${extraClass}`} //${disabled ? "disabled" : ""}
-                  onClick={() => handleClick(cake)}
-                // style={{ cursor: disabled ? "not-allowed" : "pointer" }}
-                >
-                  <img
-                    src={`${API_URL}/image/${FOLDER_URL}/${cake.image}`}
-                    alt={cake.name}
-                    className="hero-img"
-                  />
-                  {/* {disabled && <div className="overlay">完売</div>} */}
-                </div>
-              );
-            })}
-          </div>
+      return (
+        <div
+          key={`${cake.id ?? index}-${index}`}
+          className={`hero-cell ${extraClass}`} //${disabled ? "disabled" : ""}
+          onClick={() => handleClick(cake)}
+          // style={{ cursor: disabled ? "not-allowed" : "pointer" }}
+        >
+          <img
+            src={`${API_URL}/image/${FOLDER_URL}/${cake.image}`}
+            alt={cake.name}
+            className="hero-img"
+          />
+          {/* {disabled && <div className="overlay">完売</div>} */}
         </div>
-      </div>
-    </div>
+      );
+    })}
+  </div>
+</div>
+</div>
+</div>
   );
 }
