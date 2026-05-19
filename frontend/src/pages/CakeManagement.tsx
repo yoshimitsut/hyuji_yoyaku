@@ -437,7 +437,7 @@ export default function CakeManagement() {
               {/* 🔹 画像セクション */}
               <div className="form-group">
                 <label htmlFor="image">ケーキ画像</label>
-
+ 
                 {/* 画像プレビュー */}
                 {(imagePreview || (editingCake && newCake.image && !selectedImage)) && (
                   <div className="image-preview">
