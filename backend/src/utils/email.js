@@ -6,21 +6,21 @@ const nodemailer = require('nodemailer');
 const resend = new Resend(process.env.RESEND_API_KEY || "re_ecUCJmMg_9n5TprDshhvgTGMWrcf7NJdz");
 
 const EMAIL_CONFIG = {
-  fromName: process.env.EMAIL_FROM_NAME,
-  fromResend: process.env.EMAIL_FROM_RESEND,
-  fromGmail: process.env.EMAIL_FROM_GMAIL,
-  gmailPass: process.env.EMAIL_PASS
+    fromName: process.env.EMAIL_FROM_NAME,
+    fromResend: process.env.EMAIL_FROM_RESEND,
+    fromGmail: process.env.EMAIL_FROM_GMAIL,
+    gmailPass: process.env.EMAIL_PASS
 };
 
 // Configura o transporter do Nodemailer (usado para atualizações/cancelamentos)
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: EMAIL_CONFIG.fromGmail,
-    pass: EMAIL_CONFIG.gmailPass
-  }
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+        user: EMAIL_CONFIG.fromGmail,
+        pass: EMAIL_CONFIG.gmailPass
+    }
 });
 
 /**
@@ -29,13 +29,13 @@ const transporter = nodemailer.createTransport({
  * @returns {string} Data formatada em Japonês
  */
 const formatDateJP = (dateString) => {
-  if (!dateString) return '';
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return '';
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}年${month}月${day}日`;
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return '';
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}年${month}月${day}日`;
 };
 
 /**
@@ -45,7 +45,7 @@ const formatDateJP = (dateString) => {
  * @returns {Promise<void>}
  */
 async function sendNewOrderConfirmation(newOrder, orderId) {
-    const qrCodeBuffer = await QRCode.toBuffer(String(orderId), { type:'png', width:400 });
+    const qrCodeBuffer = await QRCode.toBuffer(String(orderId), { type: 'png', width: 400 });
     const qrCodeContentId = 'qrcode_order_id';
 
     const totalGeral = newOrder.cakes.reduce((total, cake) => {
@@ -56,17 +56,17 @@ async function sendNewOrderConfirmation(newOrder, orderId) {
     <div style="border: 1px solid #ddd; padding: 20px; max-width: 400px; margin: 0 auto; font-family: Arial, sans-serif;">  
         <h2>🎂 注文ありがとうございます！</h2>
         <p>お名前: ${newOrder.first_name} ${newOrder.last_name}</p>
-        <p>受付番号: <strong>${String(orderId).padStart(4,"0")}</strong></p>
+        <p>受付番号: <strong>${String(orderId).padStart(4, "0")}</strong></p>
         <p>電話番号: ${newOrder.tel}</p>
         <p>受け取り日時: ${newOrder.date} / ${newOrder.pickupHour}</p>
         <p>メッセージ: ${newOrder.message || '無し'}</p>
 
         <h3 style="border-bottom: 2px solid #333; padding-bottom: 5px;">ご注文商品</h3>
                 
-        ${newOrder.cakes.map(cake => { 
-            const cakeTotalPrice = (cake.price) * cake.amount;
+        ${newOrder.cakes.map(cake => {
+        const cakeTotalPrice = (cake.price) * cake.amount;
 
-            return `
+        return `
                 <table style="width: 400px; margin-bottom: 20px; border-collapse: collapse; background: #f9f9f9; border-radius: 8px; overflow: hidden;">
                     <tr>
                         <td style="width: 120px; padding: 15px 0px 15px 15px; vertical-align: top;">
@@ -106,6 +106,7 @@ async function sendNewOrderConfirmation(newOrder, orderId) {
         <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin-top: 20px;">
             <p style="margin: 0; font-size: 14px;">上記の内容に相違がございましたら、お手数をお掛けしますが、</p>
             <p style="margin: 5px 0 0 0; font-size: 14px;">ご連絡をお願いいたします。</p>
+            <p style="margin: 5px 0 0 0; font-size: 10px; color: red; text-align: center;">※ご注文をキャンセルされる場合、商品受取日3日前までにお店にご連絡お願い致します。</p>
             <p style="margin: 10px 0 0 0;"><strong>Patisserie H.Yuji</strong></p>
             <p style="margin: 5px 0;">open 11:00 - 19:00</p>
             <p style="margin: 5px 0;">TEL: <a href="tel:098-917-2011" style="color: #007bff; text-decoration: none;">098-917-2011</a></p>
@@ -115,19 +116,19 @@ async function sendNewOrderConfirmation(newOrder, orderId) {
     `;
 
     await resend.emails.send({
-      from: `"${EMAIL_CONFIG.fromName}" <${EMAIL_CONFIG.fromResend}>`,
-      to: [
-        newOrder.email, 
-        EMAIL_CONFIG.fromGmail
-      ],
-      subject: `🎂 ご注文確認 - 受付番号 ${String(orderId).padStart(4,"0")}`,
-      html: htmlContent,
-      attachments: [{
-        filename: 'qrcode.png',
-        content: qrCodeBuffer,
-        contentDisposition: 'inline',
-        contentId: qrCodeContentId
-      }]
+        from: `"${EMAIL_CONFIG.fromName}" <${EMAIL_CONFIG.fromResend}>`,
+        to: [
+            newOrder.email,
+            EMAIL_CONFIG.fromGmail
+        ],
+        subject: `🎂 ご注文確認 - 受付番号 ${String(orderId).padStart(4, "0")}`,
+        html: htmlContent,
+        attachments: [{
+            filename: 'qrcode.png',
+            content: qrCodeBuffer,
+            contentDisposition: 'inline',
+            contentId: qrCodeContentId
+        }]
     });
 }
 
@@ -172,9 +173,9 @@ async function sendOrderUpdateNotification(orderData) {
     const mailOptions = {
         from: `"Patisserie H.Yuji" <${EMAIL_CONFIG.fromResend}>`,
         to: [
-            orderData.email, 
+            orderData.email,
             EMAIL_CONFIG.fromGmail
-        ],  
+        ],
         subject: `🎂 ご注文内容変更のお知らせ - 受付番号 ${String(orderData.id_order).padStart(4, "0")}`,
         html: `
             <div style="border: 1px solid #ddd; padding: 20px; max-width: 400px; margin: 0 auto; font-family: Arial, sans-serif;">
@@ -204,6 +205,7 @@ async function sendOrderUpdateNotification(orderData) {
                 <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin-top: 20px;">
                     <p style="margin: 0; font-size: 14px;">上記の内容に相違がございましたら、お手数をお掛けしますが、</p>
                     <p style="margin: 5px 0 0 0; font-size: 14px;">ご連絡をお願いいたします。</p>
+                    <p style="margin: 5px 0 0 0; font-size: 10px; color: red; text-align: center;">※ご注文をキャンセルされる場合、商品受取日3日前までにお店にご連絡お願い致します。</p>
                     <p style="margin: 10px 0 0 0;"><strong>Patisserie H.Yuji</strong></p>
                     <p style="margin: 5px 0;">open 11:00 - 19:00</p>
                     <p style="margin: 5px 0;">TEL: <a href="tel:098-917-2011" style="color: #007bff; text-decoration: none;">098-917-2011</a></p>
@@ -217,7 +219,7 @@ async function sendOrderUpdateNotification(orderData) {
             content: qrCodeBuffer,
             contentDisposition: 'inline',
             contentId: qrCodeContentId,
-            contentType: 'image/png', 
+            contentType: 'image/png',
             cid: qrCodeContentId
         }]
     };
